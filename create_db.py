@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 from app import app
 from sqlalchemy import create_engine
 from app.models import Base
