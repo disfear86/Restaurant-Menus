@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 from app import app
 
 if __name__ == '__main__':
