@@ -8,7 +8,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from sqlalchemy.orm import sessionmaker
 from app import forms
 from app.forms import LoginForm, RegistrationForm
-from app.oauth import FacebookOAuth
+from app.oauth import FacebookOAuth, GoogleOAuth
 from app.auth import log_in
 from passlib.hash import sha256_crypt
 import json
@@ -43,9 +43,35 @@ def oauth_callback_facebook():
     if social_id is None:
         flash('Authentication Failed.')
         return redirect(url_for('homepage'))
-    user = session.query(User).filter_by(social_id=social_id).one()
+    user = session.query(User).filter_by(social_id=social_id).first()
     if not user:
-        user = User(social_id=social_id, nickname=username, email=email)
+        user = User(social_id=social_id, username=username, email=email)
+        session.add(user)
+        session.commit()
+    login_user(user, True)
+    return redirect(url_for('homepage'))
+
+
+@app.route('/authorize/google')
+def oauth_google():
+    if not current_user.is_anonymous:
+        return redirect(url_for('homepage'))
+    oauth = GoogleOAuth()
+    return oauth.authorize()
+
+
+@app.route('/callback/google')
+def oauth_callback_google():
+    if not current_user.is_anonymous:
+        return redirect(url_for('homepage'))
+    oauth = GoogleOAuth()
+    social_id, username, email = oauth.callback()
+    if social_id is None:
+        flash('Authentication Failed.')
+        return redirect(url_for('homepage'))
+    user = session.query(User).filter_by(social_id=social_id).first()
+    if not user:
+        user = User(social_id=social_id, username=username, email=email)
         session.add(user)
         session.commit()
     login_user(user, True)
@@ -145,8 +171,11 @@ def add_restaurant():
 @login_required
 def edit_restaurant(rest_id):
     user = current_user
-    form = forms.EditRestaurant(request.form)
     restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
+    if user.id != restaurant.user_id:
+        flash("You don't have permission to edit this information.")
+        return redirect(url_for('list_restaurants'))
+    form = forms.EditRestaurant(request.form)
     if request.method == 'POST' and 'new_name' in request.form:
         restaurant.name = form.new_name.data
         return redirect(url_for('list_restaurants'))
@@ -160,6 +189,9 @@ def del_restaurant(rest_id):
     user = current_user
     restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
     menu = session.query(MenuItem).filter_by(restaurant_id=rest_id).all()
+    if user.id != restaurant.user_id:
+        flash("You don't have permission to edit this information.")
+        return redirect(url_for('list_restaurants'))
     if request.method == 'POST':
         for item in menu:
             session.delete(item)
@@ -185,6 +217,9 @@ def new_menu_item(rest_id):
     user = current_user
     form = forms.NewMenuItem(request.form)
     restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
+    if user.id != restaurant.user_id:
+        flash("You don't have permission to edit this information.")
+        return redirect(url_for('show_menu', rest_id=restaurant.id))
     if request.method == 'POST':
         name = form.name.data
         description = form.description.data
@@ -205,6 +240,9 @@ def edit_menu_item(rest_id, menu_id):
     form = forms.EditMenuItem(request.form)
     restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
     menu = session.query(MenuItem).filter_by(id=menu_id).one()
+    if user.id != restaurant.user_id:
+        flash("You don't have permission to edit this information.")
+        return redirect(url_for('show_menu', rest_id=restaurant.id))
     if request.method == 'POST':
         if form.new_name.data != '':
             menu.name = form.new_name.data
@@ -226,6 +264,9 @@ def delete_menu_item(rest_id, menu_id):
     user = current_user
     restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
     menu = session.query(MenuItem).filter_by(id=menu_id).one()
+    if user.id != restaurant.user_id:
+        flash("You don't have permission to edit this information.")
+        return redirect(url_for('show_menu', rest_id=restaurant.id))
     if request.method == 'POST':
         session.delete(menu)
         session.commit()
