@@ -1,0 +1,88 @@
+{% extends 'header.html' %}
+
+<html>
+<body style="padding-bottom: 60;">
+{% block body %}
+
+<head>
+	<link rel="stylesheet" href="{{ url_for('static',
+	filename='css/style.css') }}">
+	<title>Search</title>
+
+</head>
+
+<table align="center" class="table table-hover table-condensed" style="max-width:70%";>
+  <tr class="active" style="width:20em;">
+	  	<th>Restaurant</th>
+  </tr>
+{% if rests_data != 'No restaurants found.' %}
+	{% for item in rests_data %}
+	<tr>
+	   <td>
+		 <a href="{{url_for('show_menu', rest_id=item.id)}}">{{item.name}}</a>
+	   </td>
+	 </tr>
+	 {% endfor %}
+
+	<tr>
+		<td class="dat">
+
+		</td>
+		<td class="dat">
+
+		</td>
+	</tr>
+
+	{% else %}
+	<tr>
+	   <td class="dat">
+		   {{rests_data}}
+	   </td>
+	   <td class="dat">
+
+	   </td>
+	 </tr>
+{% endif %}
+</table>
+
+<table align="center" class="table table-hover table-condensed" style="max-width:70%";>
+  <tr class="active" style="width:20em;">
+	  	<th>Menu Entries</th>
+			<th>Restaurant</th>
+  </tr>
+{% if menu_data != 'No menu entries found.' %}
+	{% for item in menu_data %}
+	<tr>
+	   <td>
+		 <a href="{{url_for('show_menu', rest_id=item[0].restaurant_id)}}">{{item[0].name}}</a>
+	   </td>
+		 <td>
+		 <a href="{{url_for('show_menu', rest_id=item[0].restaurant_id)}}">{{item[1].name}}</a>
+	   </td>
+	 </tr>
+	 {% endfor %}
+
+	<tr>
+		<td class="dat">
+
+		</td>
+		<td class="dat">
+
+		</td>
+	</tr>
+
+	{% else %}
+	<tr>
+	   <td class="dat">
+		   {{menu_data}}
+	   </td>
+	   <td class="dat">
+
+	   </td>
+	 </tr>
+{% endif %}
+</table>
+
+{% endblock %}
+</body>
+</html>

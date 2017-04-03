@@ -1,0 +1,23 @@
+{% extends 'header.html' %}
+<body>
+
+{% block body %}
+
+<head>
+	<title>Delete {{ restaurant.name }}.</title>
+</head>
+
+<div class="container" align="middle">
+  <h4>Are you sure you want to delete <b>{{ restaurant.name }}</b>?
+
+  <form class="form-inline" method="post" action="">
+
+    <p><input id="sub" type="submit" class="btn btn-danger" value="Delete"style="margin-top:4px;"></input>
+  </form>
+</div>
+
+{% endblock %}
+
+</body>
+
+</html>

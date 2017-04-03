@@ -1,0 +1,30 @@
+{% extends 'header.html' %}
+<body>
+
+{% block body %}
+
+<head>
+	<title>Edit {{ restaurant.name }}.</title>
+</head>
+
+  <div class="container" align="middle">
+  	<h4>Add new menu item for <b>{{ restaurant.name }}</b>.
+
+			{% from "_formhelpers.html" import render_field %}
+			<form method=post action="" style="margin-bottom:5em;">
+				<dl>
+					{{render_field(form.name)}}
+          {{render_field(form.description)}}
+          {{render_field(form.price)}}
+          {{render_field(form.course)}}
+				</dl>
+				<p><input class="btn btn-primary" type=submit value=Submit></p>
+			</form>
+		</div>
+
+
+{% endblock %}
+
+</body>
+
+</html>

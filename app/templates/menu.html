@@ -1,0 +1,40 @@
+{% extends 'header.html' %}
+<body style="padding-bottom: 60%; min-height: 100%;">
+
+{% block body %}
+
+<head>
+	<title>{{ restaurant.name }}'s Menu.</title>
+</head>
+	<div align="middle" class = "container">
+		<h4>{{ restaurant.name }}
+	</div>
+	{% if restaurant.user_id == user.id %}
+  <div align="middle" class = "container">
+    <a href="new"><button type="submit" class="btn btn-primary btn-xs"> Add Menu Item</button></a>
+  </div>
+	{% endif %}
+	<table align="center" class="table table-hover table-condensed" style="max-width:70%";>
+    {% for item in menu %}
+      <hr>
+      <p>{{ item.name }}
+      <p>{{ item.description }}
+      <p>{{ item.course }}
+      <p>{{ item.price }}
+      <p>
+			{% if restaurant.user_id == user.id %}
+			<a href= "{{item.id}}/edit" }}>
+  				<span class= "glyphicon glyphicon-pencil"></span>
+			</a>
+			<a href= "{{item.id}}/delete" }}>
+				<span class="glyphicon glyphicon-trash" style="margin-bottom:15px; "></span>
+			</a>
+			{% endif %}
+
+    {% endfor %}
+
+{% endblock %}
+
+</body>
+
+</html>

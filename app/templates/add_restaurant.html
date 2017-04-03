@@ -1,0 +1,27 @@
+{% extends 'header.html' %}
+<body>
+
+{% block body %}
+
+<head>
+	<title>New restaurant.</title>
+</head>
+
+  <div class="container" align="middle">
+  	<h4>Add new Restaurant.
+
+			{% from "_formhelpers.html" import render_field %}
+			<form method=post action="" style="margin-bottom:5em;">
+				<dl>
+					{{render_field(form.name)}}
+				</dl>
+				<p><input class="btn btn-primary" type=submit value=Submit></p>
+			</form>
+		</div>
+
+
+{% endblock %}
+
+</body>
+
+</html>

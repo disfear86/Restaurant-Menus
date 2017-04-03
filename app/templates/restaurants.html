@@ -1,0 +1,44 @@
+{% extends 'header.html' %}
+<body>
+
+{% block body %}
+
+<head>
+	<title>Restaurants</title>
+</head>
+
+<div align="middle" class = "container" style="margin-bottom:8px;">
+	<a href="{{url_for('add_restaurant')}}"><button type="submit" class="btn btn-primary btn-xs"> Add Restaurant</button></a>
+</div>
+
+<table align="center" class="table table-hover table-condensed" style="max-width:70%";>
+
+	{% for restaurant in restaurants %}
+
+	<tr>
+  	<td class="dat">
+			<a href= "{{restaurant.id}}/menu" }}>{{ restaurant.name }}</a>
+		</td>
+  	<td>
+			&emsp;&ensp;
+			{% if restaurant.user_id == user.id %}
+			<a href= "{{restaurant.id}}/edit" }}>
+  				<span class= "glyphicon glyphicon-pencil"></span>
+			</a>
+			<a href= "{{restaurant.id}}/delete" }}>
+				<span class="glyphicon glyphicon-trash"></span>
+			</a>
+			{% endif %}
+		</td>
+  </tr>
+
+	{% endfor %}
+
+</table>
+
+
+{% endblock %}
+<title>Restaurants</title>
+</body>
+
+</html>
