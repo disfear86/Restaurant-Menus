@@ -1,0 +1,6 @@
+Flask==0.11.1
+Flask_Login==0.3.2
+passlib==1.6.5
+rauth==0.7.3
+SQLAlchemy==1.0.15
+WTForms==2.1
